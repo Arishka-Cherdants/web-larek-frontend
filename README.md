@@ -42,6 +42,9 @@ yarn build
 ```
 ---
 
+
+https://raw.githubusercontent.com/Arishka-Cherdants/web-larek-frontend/28389b3d2cf680c6f4a4ecdfeff36da71a95d6e1/ClassDiagram1.jpg
+
 payType - тип, определяющий доступные методы оплаты:
 - Онлайн 
 - При получении
