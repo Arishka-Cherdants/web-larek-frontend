@@ -1,49 +1,47 @@
-type payType = 'Онлайн' | 'При получении';
-
-
-class Card implements IProduct{
-    img: HTMLImageElement;
-    category: string; 
-    title: string; 
-    description: string;
-    price: number;
-    id: string;
-    showModalView(): void{};
-}
-
-class Basket {
-    cards: Map<number, IBasketItem>;
-    totalPrice: number;
-}
-
-
-class Order implements IOrder{
-    check: Basket;
-    payment: payType;
-    address: string;
-    email: string;
-    phone: string;
-    sentOrder():void {};
-}
-
 interface IProduct {
     category: string; 
     title: string; 
     description: string;
-    price: number;
-    id: string
+    price: number | null;
+    id: string;
+    image?: string;
 }
 
-interface IBasketItem {
-    product: IProduct;
-    counter: number;
-    sumPrice: number;
-    removel(): void
+interface IAppState {
+    basket: string[];
+	catalog: IProduct[];
+	order: IOrder | null;
+	preview: string | null
 }
 
-interface IOrder {
-    payment: payType;
-    address: string;
-    email: string;
-    phone: string
+interface IBasketView {
+	items: HTMLElement[];
+	total: number;
+	selected: string[];
 }
+
+interface IOrderForm {
+  pay: string;
+  adres: string;
+  email: string;
+  phone: string;
+  total: string | number;
+}
+
+interface IOrder extends IOrderForm {
+  items: string[];
+}
+
+interface IOrderResult {
+  id: string;
+}
+
+type TPreviewItem = Pick<IProduct, 'category' | 'title' | 'description' | 'price' | 'id' | 'image'>;
+
+type TBasketItem = Pick<IProduct, 'title' | 'price' | 'id'>;
+
+type TPayForm = Pick<IOrderForm, 'pay' | 'adres'>;
+
+type TContactsForm = Pick<IOrderForm, 'email' | 'phone'>;
+
+type FormErrors = Partial<Record<keyof IOrder, string>>;
