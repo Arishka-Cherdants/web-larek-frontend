@@ -226,7 +226,7 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 - **`removeProdBasket`**: удаляет конкретный продукт из корзины
 
-- **`clearFulBasket`**: полностью очищает корзину
+- **`clearFullBasket`**: полностью очищает корзину
 
 - **`getAllProdsBasket`**: получение данных продуктов, находящихся в корзине
 

@@ -1,4 +1,4 @@
-interface IProduct {
+export interface IProduct {
     category: string; 
     title: string; 
     description: string;
@@ -7,20 +7,20 @@ interface IProduct {
     image?: string;
 }
 
-interface IAppState {
-    basket: string[];
-	catalog: IProduct[];
-	order: IOrder | null;
-	preview: string | null
+export interface IAppState {
+    basket: IProduct[];
+    catalog: IProduct[];
+    order: IOrder | null;
+    preview: string | null
 }
 
-interface IBasketView {
+export interface IBasketView {
 	items: HTMLElement[];
 	total: number;
 	selected: string[];
 }
 
-interface IOrderForm {
+export interface IOrderForm {
   pay: string;
   adres: string;
   email: string;
@@ -28,20 +28,20 @@ interface IOrderForm {
   total: string | number;
 }
 
-interface IOrder extends IOrderForm {
+export interface IOrder extends IOrderForm {
   items: string[];
 }
 
-interface IOrderResult {
+export interface IOrderResult {
   id: string;
 }
 
-type TPreviewItem = Pick<IProduct, 'category' | 'title' | 'description' | 'price' | 'id' | 'image'>;
+export type TPreviewItem = Pick<IProduct, 'category' | 'title' | 'description' | 'price' | 'id' | 'image'>;
 
-type TBasketItem = Pick<IProduct, 'title' | 'price' | 'id'>;
+export type TBasketItem = Pick<IProduct, 'title' | 'price' | 'id'>;
 
-type TPayForm = Pick<IOrderForm, 'pay' | 'adres'>;
+export type TPayForm = Pick<IOrderForm, 'pay' | 'adres'>;
 
-type TContactsForm = Pick<IOrderForm, 'email' | 'phone'>;
+export type TContactsForm = Pick<IOrderForm, 'email' | 'phone'>;
 
-type FormErrors = Partial<Record<keyof IOrder, string>>;
+export type FormErrors = Partial<Record<keyof IOrder, string>>;
