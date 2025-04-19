@@ -143,62 +143,6 @@ events.on('product:add', (item: IProduct) => {
   basket.total = appData.getTotal();
 });
 
-// //удаление товара из корзины
-// events.on('product:remove', (item: IProduct) => {
-//   appData.removeProdBasket(item);
-//   appData.updateOrder();
-//   page.counter = appData.basket.length;
-//   basket.total = appData.getTotal();
-//   let i = 1;
-//   basket.list = appData.basket.map((item) => {
-//     const prod = new Product(cloneTemplate(cardBasketTemplate), {
-//       onClick: () => events.emit('basket:changed', item),
-//     });
-//     return prod.render({
-//       title: item.title,
-//       price: item.price,
-//       basketItemIndex: i++,
-//     });
-//   });
-//   modal.render({
-//     content: basket.render(),
-//   });
-// });
-
-// events.on('basket:open', () => {
-//   basket.total = appData.getTotal();
-//   let i = 1;
-//   basket.list = appData.basket.map((item) => {
-//     const basketProd = new Product(cloneTemplate(cardBasketTemplate), {
-//       onClick: () => events.emit('product:remove', item),
-//     });
-//     return basketProd.render({
-//       title: item.title,
-//       price: item.price,
-//       basketItemIndex: i++,
-//     });
-//   });
-//   modal.render({
-//     content: basket.render({}),
-//   });
-// });
-
-// events.on('basket:changed', () => {
-//  	page.counter = appData.basket.length;
-
-// 	basket.list = appData.basket.map((item) => {
-// 		const product = new Product(cloneTemplate(cardBasketTemplate), {
-// 			onClick: () => {
-// 				events.emit('product:remove', item);
-// 			},
-// 		});
-// 		return product.render({
-// 			title: item.title,
-// 			price: item.price,
-// 		});
-// 	});
-// 	basket.total = appData.getTotal();
-// });
 
 //открытие формы заказа
 events.on('order:open', () => {
