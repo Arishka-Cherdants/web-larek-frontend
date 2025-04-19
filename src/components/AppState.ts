@@ -20,6 +20,7 @@ export class AppState extends Model <IAppState> implements IAppState{
         this.emitChanges('catalogProd:changed', {catalog: this.catalog});
     }
 
+
     addProdBasket(item: IProduct){
         this.basket.push(item);
         this.emitChanges('basket:changed', this.basket);

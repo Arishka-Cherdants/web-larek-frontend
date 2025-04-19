@@ -102,53 +102,89 @@ events.on('preview:changed', (item: IProduct) => {
 	});
 });
 
-//добавление товара в корзину
-events.on('product:add', (item: IProduct) => {
-  appData.addProdBasket(item);
-});
-
-//удаление товара из корзины
 events.on('product:remove', (item: IProduct) => {
   appData.removeProdBasket(item);
   appData.updateOrder();
+  
   page.counter = appData.basket.length;
   basket.total = appData.getTotal();
-  let i = 1;
-  basket.list = appData.basket.map((item) => {
-    const prod = new Product(cloneTemplate(cardBasketTemplate), {
-      onClick: () => events.emit('basket:changed', item),
-    });
-    return prod.render({
-      title: item.title,
-      price: item.price,
-      basketItemIndex: i++,
-    });
-  });
+  
+  updateBasketItems();
+});
+
+// Открытие корзины
+events.on('basket:open', () => {
+  basket.total = appData.getTotal();
+  updateBasketItems();
   modal.render({
-    content: basket.render(),
+    content: basket.render({}),
   });
 });
 
-events.on('basket:open', () => {
-  basket.total = appData.getTotal();
-  let i = 1;
-  basket.list = appData.basket.map((item) => {
+//Добавляем вспомогательную функцию для обновления списка товаров
+function updateBasketItems() {
+  basket.list = appData.basket.map((item, index) => {
     const basketProd = new Product(cloneTemplate(cardBasketTemplate), {
       onClick: () => events.emit('product:remove', item),
     });
     return basketProd.render({
       title: item.title,
       price: item.price,
-      basketItemIndex: i++,
+      basketItemIndex: index + 1, 
     });
   });
-  modal.render({
-    content: basket.render({}),
-  });
+}
+
+
+//добавление товара в корзину
+events.on('product:add', (item: IProduct) => {
+  appData.addProdBasket(item);
+  page.counter = appData.basket.length;
+  basket.total = appData.getTotal();
 });
 
+// //удаление товара из корзины
+// events.on('product:remove', (item: IProduct) => {
+//   appData.removeProdBasket(item);
+//   appData.updateOrder();
+//   page.counter = appData.basket.length;
+//   basket.total = appData.getTotal();
+//   let i = 1;
+//   basket.list = appData.basket.map((item) => {
+//     const prod = new Product(cloneTemplate(cardBasketTemplate), {
+//       onClick: () => events.emit('basket:changed', item),
+//     });
+//     return prod.render({
+//       title: item.title,
+//       price: item.price,
+//       basketItemIndex: i++,
+//     });
+//   });
+//   modal.render({
+//     content: basket.render(),
+//   });
+// });
+
+// events.on('basket:open', () => {
+//   basket.total = appData.getTotal();
+//   let i = 1;
+//   basket.list = appData.basket.map((item) => {
+//     const basketProd = new Product(cloneTemplate(cardBasketTemplate), {
+//       onClick: () => events.emit('product:remove', item),
+//     });
+//     return basketProd.render({
+//       title: item.title,
+//       price: item.price,
+//       basketItemIndex: i++,
+//     });
+//   });
+//   modal.render({
+//     content: basket.render({}),
+//   });
+// });
+
 // events.on('basket:changed', () => {
-// 	page.counter = appData.basket.length;
+//  	page.counter = appData.basket.length;
 
 // 	basket.list = appData.basket.map((item) => {
 // 		const product = new Product(cloneTemplate(cardBasketTemplate), {
@@ -244,6 +280,7 @@ events.on('contacts:submit', () => {
     })
       appData.clearFullBasket();
       appData.clearOrder();
+      page.counter = appData.basket.length;
     })
     .catch((err: Error) => {
       console.error(err);
