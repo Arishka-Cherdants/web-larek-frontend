@@ -71,9 +71,11 @@ export class Product extends Component<IProduct> {
   set category(value: string){
     this.setText(this._category, value);
     if (value in Categorys) {
-      this._category.classList.add(Categorys[value as keyof typeof Categorys]);
-  } 
-  };
+      this._category.className = `card__category ${Categorys[value as keyof typeof Categorys]}`;
+    } else {
+        this._category.className = 'card__category';
+    }
+}
 
   set price(value: string){
     if (!value) {
