@@ -36,6 +36,7 @@ export interface IOrder extends IOrderForm {
 
 export interface IOrderResult {
   id: string;
+  total: number;
 }
 
 export type TPreviewItem = Pick<IProduct, 'category' | 'title' | 'description' | 'price' | 'id' | 'image'>;

@@ -176,9 +176,9 @@ events.on('order:open', () => {
   });
 });
 
-// events.on('pay:changed', (button: HTMLButtonElement) => {
-//   appData.setOrder('pay', button.name);
-// });
+ events.on('pay:changed', (button: HTMLButtonElement) => {
+   appData.setOrder('pay', button.name);
+ });
 
 events.on('errorsForm:change', (errors: Partial<ContactForm>) => {
 	const { email, phone } = errors;
@@ -229,25 +229,19 @@ events.on('order:submit', () => {
 });
 
 events.on('contacts:submit', () => {
-  if (!appData.validateContacts()) {
-    return;
-  }
+  const pay = {
+		...appData.getOrder(),
+		total: appData.getTotalPrice(),
+		items: appData.getAllProdsBasket(),
+	};
   api
-    .sendOrder(appData.order)
-    .then(() => {
-       page.counter = appData.basket.length;
-       const success = new Success(cloneTemplate(successTemplate), {
-        onClick: () => {
-          modal.close();
-        },
-      });
-
+    .sendOrder(pay)
+    .then((res) => {
       modal.render({
         content: success.render({
-          total: appData.getTotalPrice(),
-        }),
-      });
-
+					total: res.total,
+      })
+    })
       appData.clearFullBasket();
       appData.clearOrder();
     })
