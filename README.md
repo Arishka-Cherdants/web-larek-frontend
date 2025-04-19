@@ -89,11 +89,11 @@ interface IBasketView {
 
 ```
 interface IOrderForm {
-  pay: string;
-  adres: string;
+  payment: string;
+  address: string;
   email: string;
   phone: string;
-  totalPrice: string | number;
+  total: string | number;
 }
 ```
 
@@ -127,7 +127,7 @@ type TBasketItem = Pick<IProduct, 'title' | 'price' | 'id'>;
 
 ### Тип формы для оплаты заказа
 ```
-type TPayForm = Pick<IOrderForm, 'pay' | 'adres'>;
+type TPayForm = Pick<IOrderForm, 'payment' | 'address'>;
 ```
 
 ### Тип формы для контактных данных пользоваетля 
@@ -236,7 +236,7 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 - **`updateOrder`**: обновление данных заказа
 
-- **`getTotalPrice`**: получить полную сумму заказа
+- **`getTotal`**: получить полную сумму заказа
 
 - **`clearOrder`**: очистить данне заказа
 
@@ -354,7 +354,7 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 - **`_list`**: разметка контейнера списка продуктов
 
-- **`_totalPrice`**: раметка эелемента стоимости всемх проудктов
+- **`_total`**: раметка эелемента стоимости всемх проудктов
 
 - **`_buttonInBasket`**: кнопка "оформить"
 
@@ -362,7 +362,7 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 - **`set list`**: задаёт список продуктов, наодящихся в корзине
 
-- **`set totalPrice`**: задаёт стоимость всех продуктов, находящихся в корзине
+- **`set total`**: задаёт стоимость всех продуктов, находящихся в корзине
 
 - **`set buttonState`**: задаёт состояние кнопки "оформить"
 
@@ -399,13 +399,13 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 - **`buttonReceived`**: выбор оплаты при получении
 
-- **`inputAdres`**: поле ввода адреса
+- **`inputAddress`**: поле ввода адреса
 
 Методы:
 
-- **`set pay`**: задаёт значение способа оплаты
+- **`set payment`**: задаёт значение способа оплаты
 
-- **`set adres`**: задаёт значение адреса доставки
+- **`set address`**: задаёт значение адреса доставки
 
 
 ### Класс Contacts
@@ -431,13 +431,13 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 Свойства:
 
-- **`_totalPrice`**: элемент разметки с итоговой суммой заказа
+- **`_total`**: элемент разметки с итоговой суммой заказа
 
 - **`_close`**: разметка кнопки закрытия модального окна
 
 Методы:
 
-- **`set totalPrice`**: задаёт итоговую стоимость заказа
+- **`set total`**: задаёт итоговую стоимость заказа
 
 ## Слой Presenter (презентер) (посредник во взаимодйствии Model и View)
 
@@ -478,4 +478,4 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 - **`order:update`** изменение данных формы оформления заказа
 - **`contacts:change`** изменение контактных данных пользователя в форме
 - **`counter:change`** изменение счётчика продуктов
-- **`payType:changed`** изменение способа оплаты
+- **`paypentType:changed`** изменение способа оплаты

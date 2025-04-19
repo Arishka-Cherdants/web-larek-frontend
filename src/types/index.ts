@@ -22,15 +22,15 @@ export interface IBasketView {
 }
 
 export interface IOrderForm {
-  pay: string;
-  adres: string;
+  payment: string;
+  address: string;
   email: string;
   phone: string;
   total: string | number;
 }
 
 export interface IOrder extends IOrderForm {
-  pay: string;
+  payment: string;
   items: string[];
 }
 
@@ -43,7 +43,7 @@ export type TPreviewItem = Pick<IProduct, 'category' | 'title' | 'description' |
 
 export type TBasketItem = Pick<IProduct, 'title' | 'price' | 'id'>;
 
-export type TPayForm = Pick<IOrderForm, 'pay' | 'adres'>;
+export type TPayForm = Pick<IOrderForm, 'payment' | 'address'>;
 
 export type TContactsForm = Pick<IOrderForm, 'email' | 'phone'>;
 

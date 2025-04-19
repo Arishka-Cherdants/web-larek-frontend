@@ -112,7 +112,7 @@ events.on('product:remove', (item: IProduct) => {
   appData.removeProdBasket(item);
   appData.updateOrder();
   page.counter = appData.basket.length;
-  basket.totalPrice = appData.getTotalPrice();
+  basket.total = appData.getTotal();
   let i = 1;
   basket.list = appData.basket.map((item) => {
     const prod = new Product(cloneTemplate(cardBasketTemplate), {
@@ -130,7 +130,7 @@ events.on('product:remove', (item: IProduct) => {
 });
 
 events.on('basket:open', () => {
-  basket.totalPrice = appData.getTotalPrice();
+  basket.total = appData.getTotal();
   let i = 1;
   basket.list = appData.basket.map((item) => {
     const basketProd = new Product(cloneTemplate(cardBasketTemplate), {
@@ -161,23 +161,23 @@ events.on('basket:changed', () => {
 			price: item.price,
 		});
 	});
-	basket.totalPrice = appData.getTotalPrice();
+	basket.total = appData.getTotal();
 });
 
 //открытие формы заказа
 events.on('order:open', () => {
   modal.render({
     content: order.render({
-      pay: '',
-      adres: '',
+      payment: '',
+      address: '',
       valid: false,
       errors: [],
     }),
   });
 });
 
- events.on('pay:changed', (button: HTMLButtonElement) => {
-   appData.setOrder('pay', button.name);
+ events.on('payment:changed', (button: HTMLButtonElement) => {
+   appData.setOrder('payment', button.name);
  });
 
 events.on('errorsForm:change', (errors: Partial<ContactForm>) => {
@@ -189,9 +189,9 @@ events.on('errorsForm:change', (errors: Partial<ContactForm>) => {
 });
 
 events.on('errorsForm:change', (errors: Partial<PaymentForm>) => {
-	const { pay, adres } = errors;
-	order.valid = !pay && !adres;
-	order.errors = Object.values({ pay, adres })
+	const { payment, address } = errors;
+	order.valid = !payment && !address;
+	order.errors = Object.values({ payment, address })
 		.filter((i) => !!i)
 		.join('; ');
 });
@@ -212,7 +212,7 @@ events.on(
 );
 
 events.on('order:ready', () => {
-	order.pay = appData.order.pay;
+	order.payment = appData.order.payment;
 });
 
 //открытие формы контактов
@@ -229,13 +229,13 @@ events.on('order:submit', () => {
 });
 
 events.on('contacts:submit', () => {
-  const pay = {
+  const payment = {
 		...appData.getOrder(),
-		total: appData.getTotalPrice(),
+		total: appData.getTotal(),
 		items: appData.getAllProdsBasket(),
 	};
   api
-    .sendOrder(pay)
+    .sendOrder(payment)
     .then((res) => {
       modal.render({
         content: success.render({

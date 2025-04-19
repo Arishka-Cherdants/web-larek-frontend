@@ -5,10 +5,10 @@ export class AppState extends Model <IAppState> implements IAppState{
   basket: IProduct[] = [];
 	catalog: IProduct[];
 	order: IOrder = {
-    adres: '',
+    address: '',
     email: '',
     phone: '',
-    pay: '',
+    payment: '',
     items: [],
     total: "",
   };
@@ -50,20 +50,20 @@ export class AppState extends Model <IAppState> implements IAppState{
     };
 
     updateOrder(){
-      this.order.total = this.getTotalPrice();
+      this.order.total = this.getTotal();
       this.order.items = this.basket.map((item) => item.id);
     };
 
-    getTotalPrice(){
+    getTotal(){
         return this.basket.reduce((total, item) => total + item.price, 0);
     };
 
     clearOrder(){
       this.order = {
-        adres: '',
+        address: '',
             email: '',
             phone: '',
-            pay: '',
+            payment: '',
             items: [],
             total: ''
       }
@@ -86,8 +86,8 @@ export class AppState extends Model <IAppState> implements IAppState{
 
     getOrder() {
         return {
-            pay: this.order.pay,
-            adres: this.order.adres,
+            payment: this.order.payment,
+            address: this.order.address,
             email: this.order.email,
             phone: this.order.phone,
             total: this.order.total,
@@ -97,11 +97,11 @@ export class AppState extends Model <IAppState> implements IAppState{
 
     validateOrder(){
       const errors: typeof this.errorsForm = {};
-		if (!this.order.adres) {
-			errors.adres = 'Укажите адрес!';
+		if (!this.order.address) {
+			errors.address = 'Укажите адрес!';
 		}
-		if (!this.order.pay) {
-			errors.pay = 'Выберите способ оплаты!';
+		if (!this.order.payment) {
+			errors.payment = 'Выберите способ оплаты!';
 		}
 		this.errorsForm = errors;
 		this.events.emit('errorsForm:change', this.errorsForm);

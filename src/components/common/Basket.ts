@@ -47,7 +47,7 @@ export class Basket extends Component<IBasketView> {
 		}
 	}
 
-	set totalPrice(total: number) {
+	set total(total: number) {
 		this.setText(this._total, formatNumber(total));
 	}
 }

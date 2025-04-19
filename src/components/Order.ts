@@ -5,39 +5,39 @@ import { IEvents } from './base/events';
 import { Form } from './common/Form';
 
 export class Order extends Form<PaymentForm> {
-  protected _cash: HTMLButtonElement;
-  protected _card: HTMLButtonElement;
+  protected _offline: HTMLButtonElement;
+  protected _online: HTMLButtonElement;
 
 	constructor(container: HTMLFormElement, events: IEvents) {
 		super(container, events);
 
-    this._cash = ensureElement<HTMLButtonElement>(
+    this._offline = ensureElement<HTMLButtonElement>(
 			'button[name=cash]',
 			container
 		);
 
-		this._card = ensureElement<HTMLButtonElement>(
+		this._online = ensureElement<HTMLButtonElement>(
 			'button[name=card]',
 			container
 		);
 
-    this._cash.addEventListener('click', (e: Event) => {
+    this._offline.addEventListener('click', (e: Event) => {
 			const target = e.target as HTMLInputElement;
-			const field = 'pay';
+			const field = 'payment';
 			const value = target.name;
 			this.onInputChange(field, value);
 		});
 		
-		this._card.addEventListener('click', (e: Event) => {
+		this._online.addEventListener('click', (e: Event) => {
 			const target = e.target as HTMLInputElement;
-			const field = 'pay';
+			const field = 'payment';
 			const value = target.name;
 			this.onInputChange(field, value);
 		});
 
      const addressInput = ensureElement<HTMLInputElement>('input[name=address]', container);
      addressInput.addEventListener('input', () => {
-       this.onInputChange('adres', addressInput.value);
+       this.onInputChange('address', addressInput.value);
  });
 
 	}
@@ -49,7 +49,7 @@ export class Order extends Form<PaymentForm> {
 		});
 	}
 
-	set pay(value: string) {
+	set payment(value: string) {
 		this.toggleClass(
 			this.container.elements.namedItem('card') as HTMLInputElement,
 			'button_alt',
@@ -64,7 +64,7 @@ export class Order extends Form<PaymentForm> {
 		);
 	}
 
-  set adres(value: string) {
+  set address(value: string) {
 		(this.container.elements.namedItem('address') as HTMLInputElement).value =
 			value;
 	}
