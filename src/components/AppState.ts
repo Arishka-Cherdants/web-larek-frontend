@@ -72,16 +72,15 @@ export class AppState extends Model <IAppState> implements IAppState{
 
     setOrder(field: keyof IOrderForm, value: string){
       this.order[field] = value;
-      if (this.validateOrder()) {
-          this.emitChanges('order:ready', this.order)
-      }
-    };
+      this.validateOrder();
+      this.events.emit('order:ready');
+    }
 
     setContacts(field: keyof IOrderForm, value: string){
       this.order[field] = value;
 
       if (this.validateContacts()) {
-          this.emitChanges('contacts:ready', this.order)
+          this.events.emit('contacts:ready', this.order)
       }
     };
 
@@ -98,16 +97,16 @@ export class AppState extends Model <IAppState> implements IAppState{
 
     validateOrder(){
       const errors: typeof this.errorsForm = {};
-		  if (!this.order.adres) {
-			  errors.adres = 'Укажите адрес!';
-		  }
-      if (!this.order.pay) {
-        errors.pay = 'Выберите способ оплаты';
-      }
-      this.errorsForm = errors;
-      this.emitChanges('errorsForm:change', this.errorsForm);
-      return Object.keys(errors).length === 0;
-    };
+		if (!this.order.adres) {
+			errors.adres = 'Укажите адрес!';
+		}
+		if (!this.order.pay) {
+			errors.pay = 'Выберите способ оплаты!';
+		}
+		this.errorsForm = errors;
+		this.events.emit('formErrors:change', this.errorsForm);
+		return Object.keys(errors).length === 0;
+	}
 
     validateContacts(){
       const errors: typeof this.errorsForm = {};
@@ -118,7 +117,7 @@ export class AppState extends Model <IAppState> implements IAppState{
         errors.phone = 'Укажите номер телефона!';
       }
       this.errorsForm = errors;
-      this.emitChanges('errorsForm:change', this.errorsForm);
+      this.events.emit('errorsForm:change', this.errorsForm);
       return Object.keys(errors).length === 0;
     };
 }

@@ -11,6 +11,7 @@ import { IOrderForm, IProduct } from './types';
 import { Basket } from './components/common/Basket';
 import { Order, Сontacts } from './components/Order';
 import { Success } from './components/common/Success';
+import type { TPayForm as PaymentForm, TContactsForm as ContactForm } from './types/index';
 
 const events = new EventEmitter();
 const api = new LarekApi(CDN_URL, API_URL);
@@ -152,7 +153,7 @@ events.on('basket:changed', () => {
 	basket.list = appData.basket.map((item) => {
 		const product = new Product(cloneTemplate(cardBasketTemplate), {
 			onClick: () => {
-				events.emit('card:remove', item);
+				events.emit('product:remove', item);
 			},
 		});
 		return product.render({
@@ -175,22 +176,26 @@ events.on('order:open', () => {
   });
 });
 
-events.on('pay:changed', (item: HTMLButtonElement) => {
-  appData.order.pay = item.name;
-  appData.validateOrder();
+// events.on('pay:changed', (button: HTMLButtonElement) => {
+//   appData.setOrder('pay', button.name);
+// });
+
+events.on('formErrors:change', (errors: Partial<ContactForm>) => {
+	const { email, phone } = errors;
+	contacts.valid = !email && !phone;
+	contacts.errors = Object.values({ phone, email })
+		.filter((i) => !!i)
+		.join('; ');
 });
 
-events.on('formErrors:change', (errors: Partial<IOrderForm>) => {
-  const { email, phone, adres, pay } = errors;
-  order.valid = !adres && !pay;
-  contacts.valid = !email && !phone;
-  order.errors = Object.values({ adres, pay })
-    .filter((i) => !!i)
-    .join('; ');
-  contacts.errors = Object.values({ phone, email })
-    .filter((i) => !!i)
-    .join('; ');
+events.on('formErrors:change', (errors: Partial<PaymentForm>) => {
+	const { pay, adres } = errors;
+	order.valid = !pay && !adres;
+	order.errors = Object.values({ pay, adres })
+		.filter((i) => !!i)
+		.join('; ');
 });
+
 
 events.on(
   /^contacts\..*:change/,
@@ -200,10 +205,10 @@ events.on(
 );
 
 events.on(
-  /^order\..*:change/,
-  (data: { field: keyof IOrderForm; value: string }) => {
-    appData.setOrder(data.field, data.value);
-  }
+	/^order\..*:change/,
+	(data: { field: keyof IOrderForm; value: string }) => {
+		appData.setOrder(data.field, data.value);
+	}
 );
 
 events.on('order:ready', () => {
@@ -212,7 +217,7 @@ events.on('order:ready', () => {
 
 //открытие формы контактов
 events.on('order:submit', () => {
-  appData.order.total = appData.getTotalPrice();
+  appData.basket.map((item) => item.id);
   modal.render({
     content: contacts.render({
       email: '',
@@ -224,6 +229,9 @@ events.on('order:submit', () => {
 });
 
 events.on('contacts:submit', () => {
+  if (!appData.validateContacts()) {
+    return;
+  }
   api
     .sendOrder(appData.order)
     .then(() => {
@@ -233,6 +241,7 @@ events.on('contacts:submit', () => {
           modal.close();
         },
       });
+      
       modal.render({
         content: success.render({
           total: appData.getTotalPrice(),
