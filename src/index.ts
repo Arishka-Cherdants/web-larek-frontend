@@ -110,38 +110,38 @@ events.on('product:add', (item: IProduct) => {
 //удаление товара из корзины
 events.on('product:remove', (item: IProduct) => {
   appData.removeProdBasket(item);
-  // appData.updateOrder();
-  // page.counter = appData.basket.length;
-  // basket.totalPrice = appData.getTotalPrice();
-  // let i = 1;
-  // basket.list = appData.basket.map((item) => {
-  //   const prod = new Product(cloneTemplate(cardBasketTemplate), {
-  //     onClick: () => events.emit('card:removeFromBasket', item),
-  //   });
-  //   return prod.render({
-  //     title: item.title,
-  //     price: item.price,
-  //     basketItemIndex: i++,
-  //   });
-  // });
-  // modal.render({
-  //   content: basket.render(),
-  // });
+  appData.updateOrder();
+  page.counter = appData.basket.length;
+  basket.totalPrice = appData.getTotalPrice();
+  let i = 1;
+  basket.list = appData.basket.map((item) => {
+    const prod = new Product(cloneTemplate(cardBasketTemplate), {
+      onClick: () => events.emit('card:removeFromBasket', item),
+    });
+    return prod.render({
+      title: item.title,
+      price: item.price,
+      basketItemIndex: i++,
+    });
+  });
+  modal.render({
+    content: basket.render(),
+  });
 });
 
 events.on('basket:open', () => {
-  // basket.totalPrice = appData.getTotalPrice();
-  // let i = 1;
-  // basket.list = appData.basket.map((item) => {
-  //   const basketProd = new Product(cloneTemplate(cardBasketTemplate), {
-  //     onClick: () => events.emit('card:removeFromBasket', item),
-  //   });
-  //   return basketProd.render({
-  //     title: item.title,
-  //     price: item.price,
-  //     basketItemIndex: i++,
-  //   });
-  // });
+  basket.totalPrice = appData.getTotalPrice();
+  let i = 1;
+  basket.list = appData.basket.map((item) => {
+    const basketProd = new Product(cloneTemplate(cardBasketTemplate), {
+      onClick: () => events.emit('card:removeFromBasket', item),
+    });
+    return basketProd.render({
+      title: item.title,
+      price: item.price,
+      basketItemIndex: i++,
+    });
+  });
   modal.render({
     content: basket.render({}),
   });
