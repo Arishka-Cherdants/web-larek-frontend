@@ -39,17 +39,17 @@ export class Product extends Component<IProduct> {
       if (this._button) {
           this._button.addEventListener('click', actions.onClick);
       } else {
-        this._element.addEventListener('click', actions.onClick);
+        container.addEventListener('click', actions.onClick);
       }
     }
   }
 
   set id(value:string) {
-    this._element.dataset.id = value;
+    this.container.dataset.id = value;
   };
 
   get id(): string {
-    return this._element.dataset.id || '';
+    return this.container.dataset.id || '';
 };
 
   set title(value: string) {

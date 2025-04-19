@@ -15,19 +15,19 @@ export class AppState extends Model <IAppState> implements IAppState{
 	preview: string | null;
   protected errorsForm: FormErrors = {};
 
-    setCatalog(catalog: IProduct[]) {
-        this.catalog = catalog;
+    setCatalog(item: IProduct[]) {
+        this.catalog = item;
         this.emitChanges('catalogProd:changed', {catalog: this.catalog});
     }
 
     addProdBasket(item: IProduct){
         this.basket.push(item);
-        this.emitChanges('product:add', this.basket);
+        this.emitChanges('basket:changed', this.basket);
     };
 
     removeProdBasket(item: IProduct){
         this.basket = this.basket.filter((prod) => prod.id !== item.id);
-        this.emitChanges('product:remove', this.basket);
+        this.emitChanges('basket:changed', this.basket);
     };
 
     clearFullBasket(){

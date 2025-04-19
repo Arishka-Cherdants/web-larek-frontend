@@ -35,7 +35,7 @@ const appData = new AppState({}, events);
 
 // Глобальные контейнеры
 const page = new Page(document.body, events);
-const modal = new Modal(ensureElement('#modal-container'), events);
+const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), events);
 
 // Переиспользуемые части интерфейса
 const basket = new Basket(cloneTemplate(basketTemplate), events);
@@ -91,62 +91,76 @@ events.on('preview:changed', (item: IProduct) => {
   }
   
   modal.render({
-    content: prod.render({
-      title: item.title,
-      image: item.image,
-      description: item.description,
-      price: item.price,
-      category: item.category
-    }),
-  });
+		content: prod.render({
+			category: item.category,
+			title: item.title,
+			image: item.image,
+			description: item.description,
+			price: item.price,
+		}),
+	});
 });
 
 //добавление товара в корзину
 events.on('product:add', (item: IProduct) => {
   appData.addProdBasket(item);
-  appData.updateOrder();
-  page.counter = appData.basket.length;
-  modal.close();
 });
 
 //удаление товара из корзины
 events.on('product:remove', (item: IProduct) => {
   appData.removeProdBasket(item);
-  appData.updateOrder();
-  page.counter = appData.basket.length;
-  basket.totalPrice = appData.getTotalPrice();
-  let i = 1;
-  basket.list = appData.basket.map((item) => {
-    const prod = new Product(cloneTemplate(cardBasketTemplate), {
-      onClick: () => events.emit('card:removeFromBasket', item),
-    });
-    return prod.render({
-      title: item.title,
-      price: item.price,
-      basketItemIndex: i++,
-    });
-  });
-  modal.render({
-    content: basket.render(),
-  });
+  // appData.updateOrder();
+  // page.counter = appData.basket.length;
+  // basket.totalPrice = appData.getTotalPrice();
+  // let i = 1;
+  // basket.list = appData.basket.map((item) => {
+  //   const prod = new Product(cloneTemplate(cardBasketTemplate), {
+  //     onClick: () => events.emit('card:removeFromBasket', item),
+  //   });
+  //   return prod.render({
+  //     title: item.title,
+  //     price: item.price,
+  //     basketItemIndex: i++,
+  //   });
+  // });
+  // modal.render({
+  //   content: basket.render(),
+  // });
 });
 
 events.on('basket:open', () => {
-  basket.totalPrice = appData.getTotalPrice();
-  let i = 1;
-  basket.list = appData.basket.map((item) => {
-    const basketProd = new Product(cloneTemplate(cardBasketTemplate), {
-      onClick: () => events.emit('card:removeFromBasket', item),
-    });
-    return basketProd.render({
-      title: item.title,
-      price: item.price,
-      basketItemIndex: i++,
-    });
-  });
+  // basket.totalPrice = appData.getTotalPrice();
+  // let i = 1;
+  // basket.list = appData.basket.map((item) => {
+  //   const basketProd = new Product(cloneTemplate(cardBasketTemplate), {
+  //     onClick: () => events.emit('card:removeFromBasket', item),
+  //   });
+  //   return basketProd.render({
+  //     title: item.title,
+  //     price: item.price,
+  //     basketItemIndex: i++,
+  //   });
+  // });
   modal.render({
-    content: basket.render(),
+    content: basket.render({}),
   });
+});
+
+events.on('basket:changed', () => {
+	page.counter = appData.basket.length;
+
+	basket.list = appData.basket.map((item) => {
+		const product = new Product(cloneTemplate(cardBasketTemplate), {
+			onClick: () => {
+				events.emit('card:remove', item);
+			},
+		});
+		return product.render({
+			title: item.title,
+			price: item.price,
+		});
+	});
+	basket.totalPrice = appData.getTotalPrice();
 });
 
 //открытие формы заказа
@@ -185,13 +199,16 @@ events.on(
   }
 );
 
-// Изменилось одно из полей заказа - сохраняем данные об этом
 events.on(
   /^order\..*:change/,
   (data: { field: keyof IOrderForm; value: string }) => {
     appData.setOrder(data.field, data.value);
   }
 );
+
+events.on('order:ready', () => {
+	order.pay = appData.order.pay;
+});
 
 //открытие формы контактов
 events.on('order:submit', () => {
@@ -211,7 +228,11 @@ events.on('contacts:submit', () => {
     .sendOrder(appData.order)
     .then(() => {
        page.counter = appData.basket.length;
-      
+       const success = new Success(cloneTemplate(successTemplate), {
+        onClick: () => {
+          modal.close();
+        },
+      });
       modal.render({
         content: success.render({
           total: appData.getTotalPrice(),

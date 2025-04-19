@@ -3,7 +3,7 @@ import {ensureElement} from "../../utils/utils";
 import {IEvents} from "../base/events";
 
 interface IModalData {
-    content: HTMLElement;
+    content?: HTMLElement;
 }
 
 export class Modal extends Component<IModalData> {
@@ -17,6 +17,7 @@ export class Modal extends Component<IModalData> {
         this._content = ensureElement<HTMLElement>('.modal__content', container);
 
         this._closeButton.addEventListener('click', this.close.bind(this));
+       
         this.container.addEventListener('click', this.close.bind(this));
         this._content.addEventListener('click', (event) => event.stopPropagation());
     }
@@ -37,8 +38,8 @@ export class Modal extends Component<IModalData> {
     }
 
     render(data: IModalData): HTMLElement {
-        super.render(data);
-        this.open();
-        return this.container;
+      super.render(data);
+      this.open();
+      return this.container;
     }
 }
