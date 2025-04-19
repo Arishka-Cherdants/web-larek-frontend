@@ -104,7 +104,7 @@ export class AppState extends Model <IAppState> implements IAppState{
 			errors.pay = 'Выберите способ оплаты!';
 		}
 		this.errorsForm = errors;
-		this.events.emit('formErrors:change', this.errorsForm);
+		this.events.emit('errorsForm:change', this.errorsForm);
 		return Object.keys(errors).length === 0;
 	}
 

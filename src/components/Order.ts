@@ -35,10 +35,10 @@ export class Order extends Form<PaymentForm> {
 			this.onInputChange(field, value);
 		});
 
-    const addressInput = ensureElement<HTMLInputElement>('input[name=address]', container);
-    addressInput.addEventListener('input', () => {
-      this.onInputChange('adres', addressInput.value);
-});
+     const addressInput = ensureElement<HTMLInputElement>('input[name=address]', container);
+     addressInput.addEventListener('input', () => {
+       this.onInputChange('adres', addressInput.value);
+ });
 
 	}
 
@@ -71,34 +71,50 @@ export class Order extends Form<PaymentForm> {
 }
 
 export class Сontacts extends Form<ContactForm> {
-  protected _emailInput: HTMLInputElement;
-  protected _phoneInput: HTMLInputElement;
   constructor(container: HTMLFormElement, events: IEvents) {
-    super(container, events); 
-    this._emailInput = ensureElement<HTMLInputElement>('input[name=email]', container);
-    this._phoneInput = ensureElement<HTMLInputElement>('input[name=phone]', container);
-    this._emailInput.addEventListener('input', () => {
-      this.onInputChange('email', this._emailInput.value);
-});
-    this._phoneInput.addEventListener('input', () => {
-      this.onInputChange('phone', this._phoneInput.value);
-    });
+    super(container, events);
   }
 
-  protected onInputChange(field: keyof ContactForm, value: string) {
-		this.events.emit(`order.${field}:change`, {
-			field,
-			value,
-		});
-	}
-
   set email(value: string) {
-		(this.container.elements.namedItem('email') as HTMLInputElement).value =
-			value;
-	}
+    (this.container.elements.namedItem('email') as HTMLInputElement).value =
+      value;
+  }
 
   set phone(value: string) {
-		(this.container.elements.namedItem('phone') as HTMLInputElement).value =
-			value;
-	}
+    (this.container.elements.namedItem('phone') as HTMLInputElement).value =
+      value;
+  }
 }
+
+// export class Сontacts extends Form<ContactForm> {
+//   protected _emailInput: HTMLInputElement;
+//   protected _phoneInput: HTMLInputElement;
+//   constructor(container: HTMLFormElement, events: IEvents) {
+//     super(container, events); 
+//     this._emailInput = ensureElement<HTMLInputElement>('input[name=email]', container);
+//     this._phoneInput = ensureElement<HTMLInputElement>('input[name=phone]', container);
+//     this._emailInput.addEventListener('input', () => {
+//       this.onInputChange('email', this._emailInput.value);
+// });
+//     this._phoneInput.addEventListener('input', () => {
+//       this.onInputChange('phone', this._phoneInput.value);
+//     });
+//   }
+
+//   protected onInputChange(field: keyof ContactForm, value: string) {
+// 		this.events.emit(`order.${field}:change`, {
+// 			field,
+// 			value,
+// 		});
+// 	}
+
+//   set email(value: string) {
+// 		(this.container.elements.namedItem('email') as HTMLInputElement).value =
+// 			value;
+// 	}
+
+//   set phone(value: string) {
+// 		(this.container.elements.namedItem('phone') as HTMLInputElement).value =
+// 			value;
+// 	}
+// }

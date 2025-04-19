@@ -180,7 +180,7 @@ events.on('order:open', () => {
 //   appData.setOrder('pay', button.name);
 // });
 
-events.on('formErrors:change', (errors: Partial<ContactForm>) => {
+events.on('errorsForm:change', (errors: Partial<ContactForm>) => {
 	const { email, phone } = errors;
 	contacts.valid = !email && !phone;
 	contacts.errors = Object.values({ phone, email })
@@ -188,7 +188,7 @@ events.on('formErrors:change', (errors: Partial<ContactForm>) => {
 		.join('; ');
 });
 
-events.on('formErrors:change', (errors: Partial<PaymentForm>) => {
+events.on('errorsForm:change', (errors: Partial<PaymentForm>) => {
 	const { pay, adres } = errors;
 	order.valid = !pay && !adres;
 	order.errors = Object.values({ pay, adres })
@@ -241,7 +241,7 @@ events.on('contacts:submit', () => {
           modal.close();
         },
       });
-      
+
       modal.render({
         content: success.render({
           total: appData.getTotalPrice(),
