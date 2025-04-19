@@ -5,6 +5,7 @@ export interface IProduct {
     price: number | null;
     id: string;
     image?: string;
+    basketItemIndex?: number;
 }
 
 export interface IAppState {
@@ -29,6 +30,7 @@ export interface IOrderForm {
 }
 
 export interface IOrder extends IOrderForm {
+  pay: string;
   items: string[];
 }
 

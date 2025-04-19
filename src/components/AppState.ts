@@ -1,16 +1,23 @@
-import { IAppState, IProduct, IOrderForm, IOrder, IOrderResult, FormErrors, } from "../types";
+import { IAppState, IProduct, IOrderForm, IOrder, FormErrors, } from "../types";
 import { Model } from "./base/Model"
 
 export class AppState extends Model <IAppState> implements IAppState{
-    basket: IProduct[] = [];
+  basket: IProduct[] = [];
 	catalog: IProduct[];
-	order: IOrder | null;
+	order: IOrder = {
+    adres: '',
+    email: '',
+    phone: '',
+    pay: '',
+    items: [],
+    total: "",
+  };
 	preview: string | null;
-    protected errorsForm: FormErrors = {};
+  protected errorsForm: FormErrors = {};
 
     setCatalog(catalog: IProduct[]) {
         this.catalog = catalog;
-        this.emitChanges('catalogProd:changed', {catalog: this.catalog})ж
+        this.emitChanges('catalogProd:changed', {catalog: this.catalog});
     }
 
     addProdBasket(item: IProduct){
@@ -18,16 +25,19 @@ export class AppState extends Model <IAppState> implements IAppState{
         this.emitChanges('product:add', this.basket);
     };
 
-    removeProdBasket(){
-
+    removeProdBasket(item: IProduct){
+        this.basket = this.basket.filter((prod) => prod.id !== item.id);
+        this.emitChanges('product:remove', this.basket);
     };
 
     clearFullBasket(){
-
+        this.basket = [];
+        this.emitChanges('basket:changed', this.basket);
+        this.emitChanges('counter:change', this.basket);
     };
 
     getAllProdsBasket(){
-
+      return this.basket.map((item) => item.id)
     };
 
     setPreview(item: IProduct){
@@ -35,24 +45,44 @@ export class AppState extends Model <IAppState> implements IAppState{
         this.emitChanges('preview:changed', item)
     };
 
-    getProdButton(){
-
+    ProdBeBasket(item: IProduct){
+      return this.basket.some((prod) => prod.id === item.id)
     };
 
     updateOrder(){
-
+      this.order.total = this.getTotalPrice();
+      this.order.items = this.basket.map((item) => item.id);
     };
 
     getTotalPrice(){
-
+        return this.basket.reduce((total, item) => total + item.price, 0);
     };
 
     clearOrder(){
-
+      this.order = {
+        adres: '',
+            email: '',
+            phone: '',
+            pay: '',
+            items: [],
+            total: ''
+      }
+      this.emitChanges('order:change', this.order)
     };
 
-    setOrder(){
+    setOrder(field: keyof IOrderForm, value: string){
+      this.order[field] = value;
+      if (this.validateOrder()) {
+          this.emitChanges('order:ready', this.order)
+      }
+    };
 
+    setContacts(field: keyof IOrderForm, value: string){
+      this.order[field] = value;
+
+      if (this.validateContacts()) {
+          this.emitChanges('contacts:ready', this.order)
+      }
     };
 
     getOrder() {
@@ -64,19 +94,31 @@ export class AppState extends Model <IAppState> implements IAppState{
             total: this.order.total,
             items: this.order.items
         };
-    }
-
-    setContacts(){
-
     };
 
     validateOrder(){
-
+      const errors: typeof this.errorsForm = {};
+		  if (!this.order.adres) {
+			  errors.adres = 'Укажите адрес!';
+		  }
+      if (!this.order.pay) {
+        errors.pay = 'Выберите способ оплаты';
+      }
+      this.errorsForm = errors;
+      this.emitChanges('errorsForm:change', this.errorsForm);
+      return Object.keys(errors).length === 0;
     };
 
     validateContacts(){
-
+      const errors: typeof this.errorsForm = {};
+      if (!this.order.email) {
+        errors.email = 'Укажите email!';
+      }
+      if (!this.order.phone) {
+        errors.phone = 'Укажите номер телефона!';
+      }
+      this.errorsForm = errors;
+      this.emitChanges('errorsForm:change', this.errorsForm);
+      return Object.keys(errors).length === 0;
     };
-
-    
 }

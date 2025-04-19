@@ -66,8 +66,8 @@ interface IProduct {
 
 ```
  interface IAppState {
-    basket: string[];
-	catalog: ICard[];
+    basket: IProduct[];
+    catalog: IProduct[];
 	order: IOrder | null;
 	preview: string | null
 }
@@ -232,7 +232,7 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 - **`setPreview`**: выбрать продукт для подробного просмотра 
 
-- **`getProdButton`**: получает состояние кнопки продукта 
+- **`ProdBeBasket`**: смотрит находится ли товар сейчас в корзине
 
 - **`updateOrder`**: обновление данных заказа
 
@@ -240,13 +240,13 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 - **`clearOrder`**: очистить данне заказа
 
-- **`setOrder`**: задаёт жанные формы заказа
+- **`setOrder`**: задаёт данные формы заказа
 
 - **`setContacts`**: задаёт данные формы контактов 
 
 - **`validateOrder`**: валидация формы с данными заказа
 
-- **`validateContacts`**: валижация формы с контактными данными покупателя
+- **`validateContacts`**: валидация формы с контактными данными покупателя
 
 
 ## Слой View (отображение )
@@ -292,16 +292,16 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 Методы:
 
-- **`setLocked`**: состояние блокирови страницы 
+- **`set locked`**: состояние блокирови страницы 
 
-- **`setCatalog`**: задание каталога продуктов
+- **`set catalog`**: задание каталога продуктов
 
-- **`setСounter`**: задание значения счётчика корзины
+- **`set counter`**: задание значения счётчика корзины
 
 
-#### Класс Card
+#### Класс Product
 
-Карточка продукта, отображаемая на странице (имеет 3 шаблона). Интерфес ICrad
+Карточка продукта, отображаемая на странице (имеет 3 шаблона). Интерфес IProduct
 
 Свойтсва:
 
@@ -469,10 +469,13 @@ type FormErrors = Partial<Record<keyof IOrder, string>>;
 - **`modal:open`** открытие модального окна
 - **`modal:close`** закрытие модального окна
 - **`order:open'`** открытие формы оформления заказа
-- **`order:submit`** сохранение данных о заказе в форме
+- **`order:submit`** сохранение данных о заказе в форме, открыть форму контактов
 - **`contacts:submit`** сохранение контактных данных пользователя в форме
 - **`order:ready`** событие после валидация формы заказа
 - **`contacts:ready`** событие после валидация контактных данных пользователя в форме
-- **`basketButOrder`** подтверждение покупки в корзине
+- **`basketBuyOrder:open`** подтверждение покупки в корзине
 - **`order:change`** изменение данных формы оформления заказа
+- **`order:update`** изменение данных формы оформления заказа
 - **`contacts:change`** изменение контактных данных пользователя в форме
+- **`counter:change`** изменение счётчика продуктов
+- **`payType:changed`** изменение способа оплаты
